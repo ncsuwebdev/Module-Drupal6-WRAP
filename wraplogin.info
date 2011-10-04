@@ -7,3 +7,6 @@ version="6.x-1.8"
 core = 6.x
 project = "wraplogin"
 php = 5.1
+
+; for updates to the theme, specify features server location
+project status url = http://drupal.ncsu.edu/features/fserver
