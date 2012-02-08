@@ -419,4 +419,130 @@ function wraplogin_form_alter(&$form, $form_state, $form_id) {
   }
 }
 
-?>
+/*
+ * Implementation of hook_enable()
+ * http://api.drupal.org/api/drupal/modules--system--system.api.php/function/hook_enable/7
+ * 
+ */
+
+function wraplogin_enable() {
+  
+	//ensure the wraplogin directory exist with the htaccess file inside it
+	wraplogin_ensure_wraplogin_directory_htaccess_exists();
+	
+}
+
+/*
+ * Implementation of hook_disable()
+ * http://api.drupal.org/api/drupal/modules--system--system.api.php/function/hook_disable/7
+ * 
+ */
+function wraplogin_disable() {
+  
+	/*
+	 * remove the wraplogin directory as it is not required.
+	 * any htaccess rules for the drupal site (without the wraplogin module) 
+	 * would require the rules to be in the root htaccess file anyway..so...
+	 * deleting the wraplogin directory should not affect anything
+	 * 
+	 */
+	
+	wraplogin_custom_delete_wraplogin_htaccess_directory();
+	
+}
+
+/*
+ * Custom function to ensure the wraplogin directory exist with the htaccess file inside it
+ *  
+ */
+
+function wraplogin_ensure_wraplogin_directory_htaccess_exists() {
+	
+	// ensure the wraplogin directory exists first
+	wraplogin_custom_ensure_wrap_directory_exists();
+	
+	// ensure the htaccess file exists
+	wraplogin_custom_ensure_wrap_directory_htaccess_exists();
+	
+}
+
+function wraplogin_get_root_directory_of_drupal() {
+	
+	// get root directory of installation
+	// -10 is to denote the length of the /index.php which is at the end of the SCRIPT_FILENAME variable
+	return substr ( $_SERVER['SCRIPT_FILENAME'], 0, -10 );
+	
+}
+
+/*
+ * Custom function to ensure the wraplogin directory exists
+ *  
+ */
+
+function wraplogin_custom_ensure_wrap_directory_exists() {
+	
+	// check to see if the wraplogin directory exists. If not, create it.
+	if(!is_dir(wraplogin_custom_get_wraplogin_htaccess_directory())) {
+		mkdir(wraplogin_custom_get_wraplogin_htaccess_directory(), 0755, false);	
+	}
+	return true;
+}
+
+/*
+ * Custom function to ensure the .htaccess file exists inside the wraplogin directory
+ *  
+ */
+
+function wraplogin_custom_ensure_wrap_directory_htaccess_exists() {
+	
+	// if the .htaccess file does not exist where it is supposed to, then create it
+	// the understanding is that if the file exists, the contents should be correct/functional
+	// if the site admin changes the contents of the htaccess, it is assumed it is on purpose
+	// (and so this file will not overwrite it).
+	if(!file_exists(wraplogin_custom_get_wraplogin_htaccess_file())) {
+		$handle = fopen(wraplogin_custom_get_wraplogin_htaccess_file(), 'w');
+		$data = 'AuthType WRAP' . PHP_EOL;
+		$data .= 'require affiliation ncsu.edu' . PHP_EOL;
+		$data .= 'require known-user' . PHP_EOL;
+		fwrite($handle, $data);
+	}
+	return true;
+}
+
+/*
+ * Custom function to remove the wraplogin directory that contains the htaccess file
+ * Located at <site root>/wraplogin
+ * 
+ */
+
+function wraplogin_custom_delete_wraplogin_htaccess_directory() {
+	
+	// check to see if the wraplogin/.htaccess file exists. If so, delete it.
+	if(file_exists(wraplogin_custom_get_wraplogin_htaccess_file())) {
+		unlink(wraplogin_custom_get_wraplogin_htaccess_file());
+	}
+	
+	// check to see if the wraplogin directory exists. If so, delete it.
+	if(is_dir(wraplogin_custom_get_wraplogin_htaccess_directory())) {
+		rmdir(wraplogin_custom_get_wraplogin_htaccess_directory());	
+	}
+	return true;
+}
+
+/*
+ * Custom function to specify the wraplogin directory path
+ * 
+ */
+
+function wraplogin_custom_get_wraplogin_htaccess_directory() {
+	return wraplogin_get_root_directory_of_drupal() . '/wraplogin';
+}
+
+/*
+ * Custom function to specify the wraplogin/.htaccess file path
+ * 
+ */
+
+function wraplogin_custom_get_wraplogin_htaccess_file() {
+	return wraplogin_custom_get_wraplogin_htaccess_directory() . '/.htaccess';
+}

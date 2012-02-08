@@ -3,7 +3,7 @@ name = "WRAP Login"
 description = "Allows NCSU users to log into your site using WRAP."
 package = External authentication
 
-version="6.x-1.8"
+version="6.x-1.9"
 core = 6.x
 project = "wraplogin"
 php = 5.1
