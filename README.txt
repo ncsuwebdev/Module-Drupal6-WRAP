@@ -1,6 +1,6 @@
 //$Id$
 
-WRAPlogin module v6.x-1.8
+WRAPlogin module v6.x-1.9
 =========================
 By brabec at ncsu.edu
 Modified from Pubcookie by jvandyk at iastate.edu
@@ -48,14 +48,17 @@ Ensure that Clean URLs are enabled at
 
 LOGIN DIRECTORY
 ---------------
-You will also need to create a WRAP-protected directory inside your 
+You may also need to create a WRAP-protected directory inside your 
 Drupal install that Drupal will use to hook into the WRAP module 
-provided by Apache. The directory should be named "wraplogin" by default
-and must exist in the top level directory of your Drupal installation.
-Inside the directory, create an .htaccess file as described in 
-the Prerequistes section above. Do not place any other files in this
-directory. (Unless you need to solve a rewrite problem, see that
-section below.)
+provided by Apache. 
+
+The directory should be created by default when enabling the module. 
+
+If a directory called "wraplogin" is not created in your drupal root 
+directory when you enable the module, create it, and then inside 
+create an .htaccess file as described in the Prerequistes section 
+above. Do not place any other files in this directory. (Unless 
+you need to solve a rewrite problem, see that section below.)
 
 USE AUTOMATIC LOGIN
 -------------------
