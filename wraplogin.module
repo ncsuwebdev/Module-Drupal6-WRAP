@@ -384,6 +384,8 @@ function wraplogin_find_wrap_rid() {
  * Implementation of hook_cron()
  */
 function wraplogin_cron() {
+	
+  wraplogin_ensure_wraplogin_directory_htaccess_exists();
 
   $lastupdate = variable_get('wraplogin_lastcron', 0);
   $nextupdate = $lastupdate + 86400 - 300; // 24hrs - 5 mins
