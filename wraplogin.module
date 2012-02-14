@@ -471,8 +471,16 @@ function wraplogin_ensure_wraplogin_directory_htaccess_exists() {
 function wraplogin_get_root_directory_of_drupal() {
 	
 	// get root directory of installation
-	// -10 is to denote the length of the /index.php which is at the end of the SCRIPT_FILENAME variable
-	return substr ( $_SERVER['SCRIPT_FILENAME'], 0, -10 );
+	// -10 is to denote the length of the /index.php which is at the end of the SCRIPT_FILENAME variable when running on an installed site
+	// -12 is to denote the length of the /install.php which is at the end of the SCRIPT_FILENAME variable when running in an installation profile
+		
+	if (strpos($_SERVER['SCRIPT_FILENAME'], 'install.php')) {
+		// this is running as part of the install profile
+		return substr ( $_SERVER['SCRIPT_FILENAME'], 0, -12 );
+	} else {
+		// this is running as part of an installed site
+		return substr ( $_SERVER['SCRIPT_FILENAME'], 0, -10 );
+	}
 	
 }
 
